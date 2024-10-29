@@ -1,0 +1,123 @@
+
+import streamlit as st
+from resources import Resources
+from espresso import Espresso
+from latte import Latte
+
+if "resources_instance" not in st.session_state:
+    st.session_state.resources_instance = Resources()
+if "disabled" not in st.session_state:
+    st.session_state["disabled"] = False
+# Initialize session state variables
+if 'exitMachine' not in st.session_state:
+    st.session_state.exitMachine = False
+if 'userAnswer' not in st.session_state:
+    st.session_state.userAnswer = ""
+
+def disable():
+    st.session_state["disabled"] = True
+def exitMachineCase():
+    if st.session_state.userAnswer.lower() == "off":
+        st.session_state.exitMachine = True
+
+espresso = Espresso()
+latte = Latte()
+mainResources = Resources()
+
+exitMachine = False
+
+st.title("🎈Coffee Machine ☕")
+prompt = st.chat_input("Say something")
+if prompt:
+    st.write(f"User has sent the following prompt: {prompt}")
+
+
+
+# Loop until user enters "off" to exit
+#while not st.session_state.exitMachine:
+st.session_state.userAnswer = st.text_input(
+    "Hello 👋. *What would you like? (espresso/latte/cappuccino/off)*:",
+    key="coffee_machine_input",
+    on_change=disable
+)
+
+if st.session_state.userAnswer:
+    user_answer = st.session_state.userAnswer.lower()
+    if (user_answer == 'espresso'):
+        st.write("Brewing an espresso ☕...")
+    elif (user_answer == 'latte'):
+        st.write("Brewing an LATTE ☕...")
+    elif (user_answer == 'cappucino'):
+        st.write("Brewing an cappucino ☕...")
+    elif (user_answer == 'off'):
+        st.write("Exiting the machine")
+        st.session_state.exitMachine = True
+    elif (user_answer):
+        st.write("Please enter any value like espresso, latte, cappucino or off...")
+        
+
+    if st.session_state.exitMachine:
+        st.write("Shutting down the coffee machine. Goodbye! ☕")
+        st.stop()
+
+
+
+
+st.write("Initial Resources: Report before purchasing drink")
+st.write(st.session_state.resources_instance)
+# st.write(mainResources)
+
+if espresso.checkResource(mainResources):
+    mainResources = espresso.prepare(mainResources)
+    st.write("Espresso prepared, Bone apetite!")
+    st.write(mainResources)
+else:
+    st.write("No sufficient respurces, sorry.")
+
+
+# result = str(espresso.prepare() if espresso.checkResource() else "No sufficient ingredients for espresso")
+# st.write("Espresso: " + str(result))
+# Loop until user enters "off" to exit
+#while not st.session_state.exitMachine:
+st.session_state.userAnswer = st.text_input(
+    "Hello 👋. *What would you like? (espresso/latte/cappuccino/off)*:",
+    key="coffee_machine_input",
+    on_change=disable
+)
+
+if st.session_state.userAnswer:
+    user_answer = st.session_state.userAnswer.lower()
+    if (user_answer == 'espresso'):
+        st.write("Brewing an espresso ☕...")
+    elif (user_answer == 'latte'):
+        st.write("Brewing an LATTE ☕...")
+    elif (user_answer == 'cappucino'):
+        st.write("Brewing an cappucino ☕...")
+    elif (user_answer == 'off'):
+        st.write("Exiting the machine")
+        st.session_state.exitMachine = True
+    elif (user_answer):
+        st.write("Please enter any value like espresso, latte, cappucino or off...")
+        
+
+    if st.session_state.exitMachine:
+        st.write("Shutting down the coffee machine. Goodbye! ☕")
+        st.stop()
+
+
+
+
+st.write("Initial Resources: Report before purchasing drink")
+st.write(st.session_state.resources_instance)
+# st.write(mainResources)
+
+if espresso.checkResource(mainResources):
+    mainResources = espresso.prepare(mainResources)
+    st.write("Espresso prepared, Bone apetite!")
+    st.write(mainResources)
+else:
+    st.write("No sufficient respurces, sorry.")
+
+
+# result = str(espresso.prepare() if espresso.checkResource() else "No sufficient ingredients for espresso")
+# st.write("Espresso: " + str(result))

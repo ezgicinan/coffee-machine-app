@@ -1,7 +1,7 @@
 # resources.py
 
 class Resources:
-    def __init__(self, water = 600, milk = 150, coffee = 100, money = 0.0): 
+    def __init__(self, water = 600, milk = 400, coffee = 100, money = 0.0): 
         self.water = water
         self.milk = milk
         self.coffee = coffee

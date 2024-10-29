@@ -1,0 +1,73 @@
+import time
+import streamlit as st
+from resources import Resources
+from espresso import Espresso
+from latte import Latte
+
+espresso = Espresso()
+latte = Latte()
+mainResources = Resources()
+
+@st.cache_data
+exitMachine = False
+@st.cache_data
+isFirstResponse = False
+
+# Streamed response emulator
+@st.cache_resource
+def response_generator(user_input):
+    response = ""  # Initialize response to avoid UnboundLocalError
+    if (user_input == 'espresso'):
+        response = "Brewing an espresso ☕..."
+    elif (user_input == 'latte'):
+        #st.write("Brewing an LATTE ☕...")
+        response = "Brewing an LATTE ☕..."
+    elif (user_input == 'cappucino'):
+        response = "Brewing an cappucino ☕..."
+    elif (user_input == 'off'):
+        response = "Exiting the machine"
+        #st.session_state.exitMachine = True
+    elif (user_input):
+        response = "Please enter any value like espresso, latte, cappucino, off or report..."
+    else:
+        response = "*What would you like? (espresso/latte/cappuccino/off/report)*:"
+    
+    return response
+
+
+st.title("🎈Coffee Machine ☕")
+
+if "resources_instance" not in st.session_state:
+    st.session_state.resources_instance = Resources()
+
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+if prompt := st.chat_input("Hello 👋. *What would you like? (espresso/latte/cappuccino/off)*:"):
+    print("\n---- BURDAMAAAAA -----\n")
+    # Check that user wrote anything or warn if just pressed Enter4
+    if prompt.strip():
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+    else:
+        # Display warning if input is empty
+        st.warning("Please enter a message before sending.")
+
+    # Display assistant response in chat message container
+    with st.chat_message("assistant"):
+        response = response_generator(prompt)
+        st.write(response)
+        print("RESPONSE DÖNEN: ", response)
+    # Add assistant response to chat history
+    st.session_state.messages.append({"role": "assistant", "content": response})
+    print("\n ---- After took response -----\n")
+
+print("messages: ", st.session_state.messages, "\n")
+
